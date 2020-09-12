@@ -52,12 +52,23 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
     return connection
 
 
-def create_query(connection, query):
+def query_create_insert(connection, query):
     connection.autocommit = True
     cursor = connection.cursor()
     try:
         cursor.execute(query)
         print("Query executed successfully")
+    except OperationalError as e:
+        print(f"The error '{e}' occurred")
+
+
+def query_select(connection, query):
+    cursor = connection.cursor()
+    result = None
+    try:
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result
     except OperationalError as e:
         print(f"The error '{e}' occurred")
 
@@ -91,14 +102,17 @@ def login():
             return apology("must provide password", 403)
 
         query = f"SELECT * FROM users WHERE username = '{str(request.form.get('username'))}';"
-        rows = create_query(connection, query)
+        print(query)
+        rows = query_select(connection, query)
+        print(rows)
+        #[(1, 'thompson', 'hi.thompson@hotmail.com', 'pbkdf2:sha256:150000$TIx4NGZv$654dcec5cc3f72163e139605e7f761c5bd41c5617bbccbde556f874ddaa7e607')]
 
         # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+        if len(rows) != 1 or not check_password_hash(rows[0][3], request.form.get("password")):
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0][0]
 
         # Redirect user to home page
         return redirect("/")
@@ -126,7 +140,7 @@ def register():
 
         query = f"INSERT INTO users(username, email, hash) VALUES('{username}', '{email}', '{pass_hash}');"
         try:
-            primary_key = create_query(connection, query)
+            primary_key = query_create_insert(connection, query)
         except psycopg2.errors.UniqueViolation as e:
             return apology("This username or email is already in use!", 403)
         session["user_id"] = primary_key
