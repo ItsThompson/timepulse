@@ -1,4 +1,5 @@
 import os
+import re
 import psycopg2
 from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
@@ -51,7 +52,7 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
     return connection
 
 
-def create_database(connection, query):
+def create_query(connection, query):
     connection.autocommit = True
     cursor = connection.cursor()
     try:
@@ -89,8 +90,8 @@ def login():
         elif not request.form.get("password"):
             return apology("must provide password", 403)
 
-        query = f"SELECT * FROM users WHERE username = {str(request.form.get('username'))};"
-        rows = create_database(connection, query)
+        query = f"SELECT * FROM users WHERE username = '{str(request.form.get('username'))}';"
+        rows = create_query(connection, query)
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
@@ -115,11 +116,19 @@ def register():
     else:
         if request.form.get("password") != request.form.get("confirmation"):
             return apology("Those passwords didn't match.", 403)
-        query = f"""INSERT INTO users(username, email, hash) VALUES({request.form.get(
-            'username')}, {request.form.get('email')}, {generate_password_hash(request.form.get('password'))});"""
-        primary_key = create_database(connection, query)
-        if primary_key == None:
-            return apology("This username is taken!", 403)
+        username = request.form.get('username')
+        email = request.form.get('email')
+        pass_hash = generate_password_hash(request.form.get('password'))
+        regex_email = re.search(
+            '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$', email)
+        if not regex_email:
+            return apology("Please enter an email.", 403)
+
+        query = f"INSERT INTO users(username, email, hash) VALUES('{username}', '{email}', '{pass_hash}');"
+        try:
+            primary_key = create_query(connection, query)
+        except psycopg2.errors.UniqueViolation as e:
+            return apology("This username or email is already in use!", 403)
         session["user_id"] = primary_key
     return redirect("/")
 
