@@ -35,7 +35,7 @@ if not os.environ.get("DATABASE_URL"):
     raise RuntimeError("DATABASE_URL not set")
 
 
-# https://realpython.com/python-sql-libraries/#postgresql
+# Source: https://realpython.com/python-sql-libraries/#postgresql
 def create_connection(db_name, db_user, db_password, db_host, db_port):
     connection = None
     try:
