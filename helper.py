@@ -2,7 +2,7 @@ import os
 import requests
 # import urllib.parse
 
-from flask import render_template  # redirect, render_template, request, session
+from flask import render_template, redirect, session  # render_template, request,
 # from functools import wraps
 
 
