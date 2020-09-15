@@ -7,7 +7,7 @@ from psycopg2 import OperationalError
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from helper import apology, get_db
+from helper import apology, get_db, login_required
 
 
 # Configure application
@@ -79,6 +79,7 @@ connection = create_connection(
 
 
 @app.route("/", methods=["GET", "POST"])
+@login_required
 def index():
     return render_template("index.html")
 
