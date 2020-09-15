@@ -105,7 +105,6 @@ def login():
         print(query)
         rows = query_select(connection, query)
         print(rows)
-        #[(1, 'thompson', 'hi.thompson@hotmail.com', 'pbkdf2:sha256:150000$TIx4NGZv$654dcec5cc3f72163e139605e7f761c5bd41c5617bbccbde556f874ddaa7e607')]
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0][3], request.form.get("password")):
