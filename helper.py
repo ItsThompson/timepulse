@@ -3,7 +3,7 @@ import requests
 # import urllib.parse
 
 from flask import render_template, redirect, session  # render_template, request,
-# from functools import wraps
+from functools import wraps
 
 
 def login_required(f):
