@@ -79,7 +79,7 @@ connection = create_connection(
 
 
 @app.route("/", methods=["GET", "POST"])
-@login_required
+# @login_required
 def index():
     return render_template("index.html")
 
