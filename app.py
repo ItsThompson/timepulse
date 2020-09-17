@@ -147,6 +147,11 @@ def register():
     return redirect("/")
 
 
+@app.route("/dashboard", methods=["GET", "POST"])
+def dashboard():
+    return render_template("dashboard.html")
+
+
 @app.route("/logout")
 def logout():
     """Log user out"""
