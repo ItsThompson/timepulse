@@ -81,7 +81,7 @@ connection = create_connection(
 @app.route("/", methods=["GET", "POST"])
 # @login_required
 def index():
-    if session.get("user_id") is None:
+    if session.get("user_id") is not None:
         return render_template("dashboard.html")
     return render_template("index.html")
 
@@ -150,6 +150,7 @@ def register():
 
 
 @app.route("/dashboard", methods=["GET", "POST"])
+@login_required
 def dashboard():
     return render_template("dashboard.html")
 
