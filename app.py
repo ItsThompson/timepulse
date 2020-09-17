@@ -81,6 +81,8 @@ connection = create_connection(
 @app.route("/", methods=["GET", "POST"])
 # @login_required
 def index():
+    if session.user_id:
+        return render_template("dashboard.html")
     return render_template("index.html")
 
 
