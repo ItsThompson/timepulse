@@ -156,6 +156,15 @@ def dashboard():
     return render_template("dashboard.html")
 
 
+@app.route("/timetable", methods=["GET", "POST"])
+@login_required
+def timetable():
+    if request.method == "GET":
+        query = f"SELECT * FROM timetable WHERE usersid = {session['user_id']}"
+        timetables = query_select(connection, query)
+        return render_template("timetable.html", timetables=timetables)
+
+
 @app.route("/logout")
 def logout():
     """Log user out"""

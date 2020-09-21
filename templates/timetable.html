@@ -1,0 +1,28 @@
+<!-- prettier-ignore -->
+{% extends "no-padding-layout.html" %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block main %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Visibility</th>
+            <th>Alert Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for i in timetables%}
+        <tr>
+            <td>{{i["name"]}}</td>
+            <td>{{i["visibility"]}}</td>
+            <td>{{i["alerttime"]}}</td>
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+{% endblock %}
+<!-- prettier-ignore-end -->
