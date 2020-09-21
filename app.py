@@ -1,7 +1,7 @@
 import os
 import re
 import psycopg2
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 from flask_session import Session
 from psycopg2 import OperationalError
 from tempfile import mkdtemp
@@ -117,6 +117,7 @@ def login():
         session["user_id"] = rows[0][0]
 
         # Redirect user to home page
+        flash("Logged in")
         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
