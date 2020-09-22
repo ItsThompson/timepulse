@@ -103,7 +103,8 @@ def login():
 
         query = f"SELECT * FROM users WHERE username = '{str(request.form.get('username'))}';"
         rows = query_select(connection, query)
-        print(rows)
+        # Output: [(id,username,email,hashedpassword)]
+        # Example Output: [(1, 'thompson', 'itsthompson1@gmail.com', 'pbkdf2:sha256:passwordbuthashed')]
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0][3], request.form.get("password")):
