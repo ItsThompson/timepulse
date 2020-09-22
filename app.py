@@ -79,7 +79,6 @@ connection = create_connection(
 
 
 @app.route("/", methods=["GET", "POST"])
-# @login_required
 def index():
     print(session.get("user_id"))
     if session.get("user_id") is not None:
@@ -90,9 +89,6 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-
-    # Forget any user_id
-    session.clear()
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
