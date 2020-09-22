@@ -6,16 +6,16 @@
 {% endblock %}
 
 {% block main %}
-<button
-    type="button"
-    class="btn btn-primary table-button"
-    data-toggle="modal"
-    data-target="#createTimetableModal"
->
-    <img src="../images/plus-sign.png" />
-    <p>Create New Table</p>
-</button>
-
+<div style="padding-bottom: 2rem">
+    <button
+        type="button"
+        class="btn btn-primary table-button"
+        data-toggle="modal"
+        data-target="#createTimetableModal"
+    >
+        <h1 class="create-new-table">Create New Table</h1>
+    </button>
+</div>
 <div class="modal fade" id="createTimetableModal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
