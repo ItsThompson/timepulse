@@ -7,11 +7,7 @@
 
 {% block main %}
 <form action="/timetable" method="POST">
-    <button
-        class="btn btn-primary"
-        type="submit"
-        style="background: url(/images/plus-sign.png)"
-    ></button>
+    <button class="btn btn-primary" type="submit">Create New Table</button>
 </form>
 <table class="table table-striped">
     <thead>
@@ -31,13 +27,5 @@
         {%endfor%}
     </tbody>
 </table>
-<div>
-    Icons made by
-    <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
-        >Freepik</a
-    >
-    from
-    <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-</div>
 {% endblock %}
 <!-- prettier-ignore-end -->
