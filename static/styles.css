@@ -1,13 +1,13 @@
 .create-new-table {
     text-transform: uppercase;
     font-size: xx-large;
-    letter-spacing: 0.5rem;
-    font-weight: bold;
+    letter-spacing: 0.1rem;
+    font-weight: 100;
 }
 
 .table-button {
     padding: 0.5rem;
-    height: 12rem;
+    height: 8rem;
     width: 100%;
 }
 
