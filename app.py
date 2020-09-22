@@ -102,9 +102,8 @@ def login():
             return apology("must provide password", 403)
 
         query = f"SELECT * FROM users WHERE username = '{str(request.form.get('username'))}';"
-        # print(query)
         rows = query_select(connection, query)
-        # print(rows)
+        print(rows)
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0][3], request.form.get("password")):
@@ -159,7 +158,8 @@ def timetable():
     if request.method == "GET":
         query = f"SELECT * FROM timetable WHERE usersid = {session['user_id']}"
         timetables = query_select(connection, query)
-        print(timetables)
+        # Output: [(user, tableid, name, visibility, alerttime)]
+        # Example Output: [(1, 1, 'test', 'public', datetime.datetime(2020, 9, 22, 2, 0, tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)))]
         return render_template("timetable.html", timetables=timetables)
 
 
