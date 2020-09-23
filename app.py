@@ -90,6 +90,9 @@ def index():
 def login():
     """Log user in"""
 
+    # Forget any user_id
+    session.clear()
+
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
@@ -171,6 +174,18 @@ def timetable():
             visibility = "public"
         else:
             visibility = request.form.get("visibility")
+
+        userid = session["user_id"]
+
+        query = f"INSERT INTO timetable(usersid, name, visibility) VALUES ('{userid}','{name}','{visibility}');"
+
+        try:
+            primary_key = query_create_insert(connection, query)
+        except psycopg2.Error as e:
+            return apology(e, 403)
+
+        print(primary_key)
+        return redirect("/")
 
 
 @app.route("/logout")
