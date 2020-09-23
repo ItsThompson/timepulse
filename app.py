@@ -115,6 +115,8 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
+        print("------------------------------------------------------------------------------------")
+        print(session)
 
         # Redirect user to home page
         flash("Logged in")
@@ -147,6 +149,8 @@ def register():
         except psycopg2.errors.UniqueViolation as e:
             return apology("This username or email is already in use!", 403)
         session["user_id"] = primary_key
+        print("------------------------------------------------------------------------------------")
+        print(session)
     return redirect("/")
 
 
@@ -180,11 +184,11 @@ def timetable():
         query = f"INSERT INTO timetable(usersid, name, visibility) VALUES ('{userid}','{name}','{visibility}');"
 
         try:
-            primary_key = query_create_insert(connection, query)
+            output = query_create_insert(connection, query)
         except psycopg2.Error as e:
             return apology(e, 403)
 
-        print(primary_key)
+        print(output)
         return redirect("/")
 
 
