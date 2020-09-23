@@ -162,6 +162,15 @@ def timetable():
         # Output: [(user, tableid, name, visibility, alerttime)]
         # Example Output: [(1, 1, 'test', 'public', datetime.datetime(2020, 9, 22, 2, 0, tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)))]
         return render_template("timetable.html", timetables=timetables)
+    else:
+        if not request.form.get("name"):
+            return apology("Please input a name for your timetable.", 403)
+        else:
+            name = request.form.get("name")
+        if not request.form.get("visibility"):
+            visibility = "public"
+        else:
+            visibility = request.form.get("visibility")
 
 
 @app.route("/logout")
