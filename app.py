@@ -80,7 +80,7 @@ connection = create_connection(
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    print(session.get("user_id"))
+    print("Session id: " + session.get("user_id"))
     if session.get("user_id") is not None:
         return render_template("dashboard.html")
     return render_template("index.html")
@@ -116,7 +116,7 @@ def login():
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
         print("------------------------------------------------------------------------------------")
-        print(session)
+        print("Login Session: " + session)
 
         # Redirect user to home page
         flash("Logged in")
@@ -150,7 +150,7 @@ def register():
             return apology("This username or email is already in use!", 403)
         session["user_id"] = primary_key
         print("------------------------------------------------------------------------------------")
-        print(session)
+        print("Register Session: " + session)
     return redirect("/")
 
 
@@ -188,7 +188,7 @@ def timetable():
         except psycopg2.Error as e:
             return apology(e, 403)
 
-        print(output)
+        print("Timetable query output: " + output)
         return redirect("/")
 
 
