@@ -100,9 +100,11 @@ def login():
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            return apology("must provide password", 403)\
 
-        query = f"SELECT * FROM users WHERE username = '{str(request.form.get('username'))}';"
+        user_id = session["user_id"]
+
+        query = f"SELECT * FROM users WHERE username = '{user_id]}';"
         rows = query_select(connection, query)
         # Output: [(id,username,email,hashedpassword)]
         # Example Output: [(1, 'thompson', 'itsthompson1@gmail.com', 'pbkdf2:sha256:passwordbuthashed')]
@@ -150,7 +152,7 @@ def register():
             return apology("This username or email is already in use!", 403)
         session["user_id"] = primary_key
         print("------------------------------------------------------------------------------------")
-        print("Register Session: " + str(session.get("user_id")))
+        print("Register Session: " + str(session["user_id"]))
     return redirect("/")
 
 
@@ -164,7 +166,7 @@ def dashboard():
 @login_required
 def timetable():
     if request.method == "GET":
-        query = f"SELECT * FROM timetable WHERE usersid = {session.get("user_id")}"
+        query = f"SELECT * FROM timetable WHERE usersid = {session["user_id"]}"
         timetables = query_select(connection, query)
         # Output: [(user, tableid, name, visibility, alerttime)]
         # Example Output: [(1, 1, 'test', 'public', datetime.datetime(2020, 9, 22, 2, 0, tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)))]
