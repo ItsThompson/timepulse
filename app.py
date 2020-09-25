@@ -80,10 +80,11 @@ connection = create_connection(
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    print("Session id: " + session.get("user_id"))
+    print("Session id: " + str(session.get("user_id")))
     if session.get("user_id") is not None:
         return render_template("dashboard.html")
-    return render_template("index.html")
+    else:
+        return render_template("index.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
