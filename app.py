@@ -144,16 +144,19 @@ def register():
         email = request.form.get('email')
         pass_hash = generate_password_hash(request.form.get('password'))
         regex_email = re.search(
-            '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$', email)
+            "^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", email)
         if not regex_email:
             return apology("Please enter an email.", 403)
 
         query = f"INSERT INTO users(username, email, hash) VALUES('{username}', '{email}', '{pass_hash}');"
         try:
-            primary_key = query_create_insert(connection, query)
+            query_create_insert(connection, query)
         except psycopg2.errors.UniqueViolation as e:
             return apology("This username or email is already in use!", 403)
-        session["user_id"] = primary_key
+
+        query = f"SELECT * FROM users WHERE username = '{username}';"
+        rows = query_select(connection, query)
+        session["user_id"] = rows[0][0]
         print("------------------------------------------------------------------------------------")
         print("Register Session: " + str(session["user_id"]))
     return redirect("/")
