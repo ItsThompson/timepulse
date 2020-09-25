@@ -172,7 +172,7 @@ def dashboard():
 @login_required
 def timetable():
     if request.method == "GET":
-        userid = session.get("user_id")
+        userid = session["user_id"]
         query = f"SELECT * FROM timetable WHERE usersid = {userid};"
         timetables = query_select(connection, query)
         # Output: [(user, tableid, name, visibility, alerttime)]
@@ -188,8 +188,7 @@ def timetable():
         else:
             visibility = request.form.get("visibility")
 
-        userid = session.get("user_id")
-
+        userid = session["user_id"]
         query = f"INSERT INTO timetable(usersid, name, visibility) VALUES ('{userid}','{name}','{visibility}');"
 
         try:
