@@ -52,11 +52,17 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
     return connection
 
 
+db = get_db()
+connection = create_connection(
+    db[0]["database"], db[0]["username"], db[0]["password"], db[0]["host"], db[0]["port"])
+
+
 def query_create_insert(connection, query):
-    connection.autocommit = True
+    # connection.autocommit = True
     cursor = connection.cursor()
     try:
         cursor.execute(query)
+        connection.commit()
         print("Query executed successfully")
     except OperationalError as e:
         print(f"The error '{e}' occurred")
@@ -71,11 +77,6 @@ def query_select(connection, query):
         return result
     except OperationalError as e:
         print(f"The error '{e}' occurred")
-
-
-db = get_db()
-connection = create_connection(
-    db[0]["database"], db[0]["username"], db[0]["password"], db[0]["host"], db[0]["port"])
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -173,6 +174,7 @@ def dashboard():
 def timetable():
     if request.method == "GET":
         userid = session["user_id"]
+        print(userid)
         query = f"SELECT * FROM timetable WHERE usersid = {userid};"
         timetables = query_select(connection, query)
         # Output: [(user, tableid, name, visibility, alerttime)]
@@ -184,19 +186,19 @@ def timetable():
         else:
             name = request.form.get("name")
         if not request.form.get("visibility"):
-            visibility = "public"
+            return apology("Please choose a visibility for your timetable!.", 403)
         else:
             visibility = request.form.get("visibility")
+
+        print(visibility)
 
         userid = session["user_id"]
         query = f"INSERT INTO timetable(usersid, name, visibility) VALUES ('{userid}','{name}','{visibility}');"
 
         try:
-            output = query_create_insert(connection, query)
+            query_create_insert(connection, query)
         except psycopg2.Error as e:
             return apology(e, 403)
-
-        print("Timetable query output: " + output)
         return redirect("/")
 
 
