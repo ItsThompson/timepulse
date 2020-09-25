@@ -117,7 +117,7 @@ def login():
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
         print("------------------------------------------------------------------------------------")
-        print("Login Session: " + session)
+        print("Login Session: " + str(session.get("user_id")))
 
         # Redirect user to home page
         flash("Logged in")
@@ -151,7 +151,7 @@ def register():
             return apology("This username or email is already in use!", 403)
         session["user_id"] = primary_key
         print("------------------------------------------------------------------------------------")
-        print("Register Session: " + session)
+        print("Register Session: " + str(session.get("user_id")))
     return redirect("/")
 
 
