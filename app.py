@@ -164,7 +164,7 @@ def dashboard():
 @login_required
 def timetable():
     if request.method == "GET":
-        query = f"SELECT * FROM timetable WHERE usersid = {session['user_id']}"
+        query = f"SELECT * FROM timetable WHERE usersid = {session.get("user_id")}"
         timetables = query_select(connection, query)
         # Output: [(user, tableid, name, visibility, alerttime)]
         # Example Output: [(1, 1, 'test', 'public', datetime.datetime(2020, 9, 22, 2, 0, tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)))]
@@ -179,7 +179,7 @@ def timetable():
         else:
             visibility = request.form.get("visibility")
 
-        userid = session["user_id"]
+        userid = session.get("user_id")
 
         query = f"INSERT INTO timetable(usersid, name, visibility) VALUES ('{userid}','{name}','{visibility}');"
 
