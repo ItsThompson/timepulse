@@ -91,6 +91,9 @@ def index():
 def login():
     """Log user in"""
 
+    # Forget any user_id
+    session.clear()
+
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
@@ -100,11 +103,11 @@ def login():
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 403)\
+            return apology("must provide password", 403)
 
-        user_id = session["user_id"]
+        username = request.form.get("username")
 
-        query = f"SELECT * FROM users WHERE username = '{user_id]}';"
+        query = f"SELECT * FROM users WHERE username = '{username}';"
         rows = query_select(connection, query)
         # Output: [(id,username,email,hashedpassword)]
         # Example Output: [(1, 'thompson', 'itsthompson1@gmail.com', 'pbkdf2:sha256:passwordbuthashed')]
@@ -166,7 +169,8 @@ def dashboard():
 @login_required
 def timetable():
     if request.method == "GET":
-        query = f"SELECT * FROM timetable WHERE usersid = {session["user_id"]}"
+        userid = session.get("user_id")
+        query = f"SELECT * FROM timetable WHERE usersid = {userid};"
         timetables = query_select(connection, query)
         # Output: [(user, tableid, name, visibility, alerttime)]
         # Example Output: [(1, 1, 'test', 'public', datetime.datetime(2020, 9, 22, 2, 0, tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)))]
