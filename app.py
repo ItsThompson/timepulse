@@ -192,6 +192,13 @@ def timetable():
 
         print(visibility)
 
+        query = f"SELECT * FROM timetable WHERE usersid = {userid};"
+        timetables = query_select(connection, query)
+
+        for i in timetables:
+            if i[2] == name:
+                return apology("Please choose another name for your timetable.", 403)
+
         userid = session["user_id"]
         query = f"INSERT INTO timetable(usersid, name, visibility) VALUES ('{userid}','{name}','{visibility}');"
 
