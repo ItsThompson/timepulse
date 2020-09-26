@@ -69,6 +69,7 @@
             <th>Name</th>
             <th>Visibility</th>
             <th>Alert Time</th>
+            <th>Edit Table</th>
         </tr>
     </thead>
     <tbody>
@@ -77,6 +78,11 @@
             <td>{{i[2]}}</td>
             <td>{{i[3]}}</td>
             <td>{{i[4]}}</td>
+            <td>
+                <button type="button" class="btn btn-default" value="{{i[2]}}">
+                    Edit This Table
+                </button>
+            </td>
         </tr>
         {%endfor%}
     </tbody>
