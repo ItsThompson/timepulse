@@ -181,32 +181,36 @@ def timetable():
         # Example Output: [(1, 1, 'test', 'public', datetime.datetime(2020, 9, 22, 2, 0, tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)))]
         return render_template("timetable.html", timetables=timetables)
     else:
-        if not request.form.get("name"):
-            return apology("Please input a name for your timetable.", 403)
-        else:
-            name = request.form.get("name")
-        if not request.form.get("visibility"):
-            return apology("Please choose a visibility for your timetable!.", 403)
-        else:
-            visibility = request.form.get("visibility")
+        if request.form.get("form") == "create":
+            if not request.form.get("name"):
+                return apology("Please input a name for your timetable.", 403)
+            else:
+                name = request.form.get("name")
+            if not request.form.get("visibility"):
+                return apology("Please choose a visibility for your timetable!.", 403)
+            else:
+                visibility = request.form.get("visibility")
 
-        print(visibility)
+            print(visibility)
 
-        query = f"SELECT * FROM timetable WHERE usersid = {userid};"
-        timetables = query_select(connection, query)
+            query = f"SELECT * FROM timetable WHERE usersid = {userid};"
+            timetables = query_select(connection, query)
 
-        for i in timetables:
-            if i[2] == name:
-                return apology("Please choose another name for your timetable.", 403)
+            for i in timetables:
+                if i[2] == name:
+                    return apology("Please choose another name for your timetable.", 403)
 
-        userid = session["user_id"]
-        query = f"INSERT INTO timetable(usersid, name, visibility) VALUES ('{userid}','{name}','{visibility}');"
+            userid = session["user_id"]
+            query = f"INSERT INTO timetable(usersid, name, visibility) VALUES ('{userid}','{name}','{visibility}');"
 
-        try:
-            query_create_insert(connection, query)
-        except psycopg2.Error as e:
-            return apology(e, 403)
-        return redirect("/")
+            try:
+                query_create_insert(connection, query)
+            except psycopg2.Error as e:
+                return apology(e, 403)
+            return redirect("/")
+        elif request.form.get("form") == "open":
+            print(request.form.get("open-timetable"))
+            return redirect("/timetable")
 
 
 @app.route("/logout")

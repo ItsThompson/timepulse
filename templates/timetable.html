@@ -27,6 +27,7 @@
             </div>
             <div class="modal-body">
                 <form action="/timetable" method="POST">
+                    <input type="hidden" name="form" value="create" />
                     <div class="form-group">
                         <input
                             autocomplete="off"
@@ -79,9 +80,17 @@
             <td>{{i[3]}}</td>
             <td>{{i[4]}}</td>
             <td>
-                <button type="button" class="btn btn-default" value="{{i[2]}}">
-                    Edit This Table
-                </button>
+                <form action="/timetable" method="POST">
+                    <input type="hidden" name="form" value="open" />
+                    <button
+                        type="submit"
+                        class="btn btn-default"
+                        name="open-timetable"
+                        value="{{i[2]}}"
+                    >
+                        Edit This Table
+                    </button>
+                </form>
             </td>
         </tr>
         {%endfor%}
