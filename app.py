@@ -81,7 +81,6 @@ def query_select(connection, query):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    print("Session id: " + str(session.get("user_id")))
     if session.get("user_id") is not None:
         return render_template("dashboard.html")
     else:
@@ -119,8 +118,6 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
-        print("------------------------------------------------------------------------------------")
-        print("Login Session: " + str(session.get("user_id")))
 
         # Redirect user to home page
         flash("Logged in")
@@ -158,8 +155,6 @@ def register():
         query = f"SELECT * FROM users WHERE username = '{username}';"
         rows = query_select(connection, query)
         session["user_id"] = rows[0][0]
-        print("------------------------------------------------------------------------------------")
-        print("Register Session: " + str(session["user_id"]))
     return redirect("/")
 
 
@@ -174,7 +169,6 @@ def dashboard():
 def timetable():
     if request.method == "GET":
         userid = session["user_id"]
-        print(userid)
         query = f"SELECT * FROM timetable WHERE usersid = {userid};"
         timetables = query_select(connection, query)
         # Output: [(user, tableid, name, visibility, alerttime)]
@@ -191,8 +185,7 @@ def timetable():
             else:
                 visibility = request.form.get("visibility")
 
-            print(visibility)
-
+            userid = session["user_id"]
             query = f"SELECT * FROM timetable WHERE usersid = {userid};"
             timetables = query_select(connection, query)
 
@@ -209,8 +202,31 @@ def timetable():
                 return apology(e, 403)
             return redirect("/")
         elif request.form.get("form") == "open":
-            print(request.form.get("open-timetable"))
-            return redirect("/timetable")
+            table = request.form.get("open-timetable")
+            userid = session["user_id"]
+            query = f"SELECT * FROM users WHERE id = '{userid}';"
+            rows = query_select(connection, query)
+            username = rows[0][1]
+        return redirect("/timetable/" + username + "/" + table)
+
+
+@app.route('/timetable/<user>/<table>', methods=["GET", "POST"])
+@login_required
+def table(user, table):
+    if request.method == "GET":
+        userid = session["user_id"]
+        query = f"SELECT * FROM timetable WHERE usersid = {userid};"
+        timetables = query_select(connection, query)
+
+        query = f"SELECT * FROM users WHERE id = '{userid}';"
+        rows = query_select(connection, query)
+        username = rows[0][1]
+
+        for i in timetables:
+            if i[2] == table:
+                if user == username:
+                    return render_template("table.html", user=user, table=table)
+        return apology("This table does not exist", 403)
 
 
 @app.route("/logout")
