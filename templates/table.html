@@ -6,7 +6,45 @@
 {% endblock %}
 
 {% block main %}
-<h1>{{user}}</h1>
-<h1>{{table}}</h1>
+<h1 style="display: inline-block">{{table}}</h1>
+<form style="float: right">
+    <button
+        style="display: inline-block; margin: auto; padding: 1rem"
+        class="btn btn-primary"
+    >
+        Create Timetable Item
+    </button>
+</form>
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Time</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- https://stackoverflow.com/questions/12681036/is-there-a-direct-approach-to-format-numbers-in-jinja2 -->
+        {%for i in range(24)%}
+        <tr class="table-light">
+            <th scope="row">
+                {{"%02d"|format(i)}}:00 - {{"%02d"|format(i+1)}}:00
+            </th>
+            <td scope="row" id="monday{{i}}"></td>
+            <td scope="row" id="tuesday{{i}}"></td>
+            <td scope="row" id="wednesday{{i}}"></td>
+            <td scope="row" id="thursday{{i}}"></td>
+            <td scope="row" id="friday{{i}}"></td>
+            <td scope="row" id="saturday{{i}}"></td>
+            <td scope="row" id="sunday{{i}}"></td>
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
 {% endblock %}
 <!-- prettier-ignore-end -->
