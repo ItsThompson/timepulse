@@ -235,7 +235,7 @@ def table(user, table):
             dow = request.form.get("dow")
             time = request.form.get("time")
             print("Title: " + title + "\n" + "Description: " + description +
-                  "\n" + "Days of the week: " + dow + "\n" + "Time: " + time + "\n")
+                  "\n" + "Days of the week: " + dow + "\n" + "Time: " + time + ":00" + "\n")
             return redirect('/timetable/'+user+'/'+table)
 
 
