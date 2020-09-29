@@ -221,12 +221,21 @@ def table(user, table):
         query = f"SELECT * FROM users WHERE id = '{userid}';"
         rows = query_select(connection, query)
         username = rows[0][1]
+        url = "/timetable/" + user + "/" + table
 
         for i in timetables:
             if i[2] == table:
                 if user == username:
-                    return render_template("table.html", user=user, table=table)
+                    return render_template("table.html", user=user, table=table, url=url)
         return apology("This table does not exist", 403)
+    else:
+        if request.form.get("form") == "create":
+            title = request.form.get("name")
+            description = request.form.get("description")
+            dow = request.form.get("dow")
+            time = request.form.get("time")
+            print(title + description + dow + time)
+            return redirect('/timetable/'+user+'/'+table)
 
 
 @app.route("/logout")
