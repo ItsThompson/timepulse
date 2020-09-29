@@ -2,107 +2,111 @@
 {% extends "no-padding-layout.html" %}
 
 {% block title %}
-    Dashboard
+    Timetable
 {% endblock %}
 
 {% block main %}
 <div style="padding-bottom: 2rem">
-    <button
-        type="button"
-        class="btn btn-primary table-button"
-        data-toggle="modal"
-        data-target="#createTimetableModal"
-    >
-        <h1 class="create-new-table">Create New Table</h1>
-    </button>
+  <button
+    type="button"
+    class="btn btn-primary table-button"
+    data-toggle="modal"
+    data-target="#createTimetableModal"
+  >
+    <h1 class="create-new-table">Create New Table</h1>
+  </button>
 </div>
 <div class="modal fade" id="createTimetableModal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Create Timetable</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    &times;
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="/timetable" method="POST">
-                    <input type="hidden" name="form" value="create" />
-                    <div class="form-group">
-                        <input
-                            autocomplete="off"
-                            autofocus
-                            class="form-control"
-                            name="name"
-                            placeholder="Name of Timetable"
-                            type="text"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <select class="form-control" name="visibility">
-                            <option disabled="" selected="" value="">
-                                Visibility
-                            </option>
-                            <option value="public">Public</option>
-                            <option value="private">Private</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-lg" type="submit">
-                        Create Timetable
-                    </button>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button
-                    type="button"
-                    class="btn btn-default"
-                    data-dismiss="modal"
-                >
-                    Close
-                </button>
-            </div>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Create Timetable</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/timetable" method="POST">
+          <input type="hidden" name="form" value="create" />
+          <div class="form-group">
+            <input
+              autocomplete="off"
+              autofocus
+              class="form-control"
+              name="name"
+              placeholder="Name of Timetable"
+              type="text"
+            />
+          </div>
+          <div class="form-group">
+            <select class="form-control" name="visibility">
+              <option disabled="" selected="" value="">Visibility</option>
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
+          <button class="btn btn-lg" type="submit">Create Timetable</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 <table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Visibility</th>
-            <th>Alert Time</th>
-            <th>Edit Table</th>
-        </tr>
-    </thead>
-    <tbody>
-        {%for i in timetables%}
-        <tr>
-            <td>{{i[2]}}</td>
-            <td>{{i[3]}}</td>
-            <td>{{i[4]}}</td>
-            <td>
-                <form action="/timetable" method="POST">
-                    <input type="hidden" name="form" value="open" />
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                        name="open-timetable"
-                        value="{{i[2]}}"
-                    >
-                        Edit This Table
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {%endfor%}
-    </tbody>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Visibility</th>
+      <th>Alert Time</th>
+      <th>Edit Table</th>
+      <th>Delete Table</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for i in timetables%}
+    <tr>
+      <td>{{i[2]}}</td>
+      <td>{{i[3]}}</td>
+      <td>{{i[4]}}</td>
+      <td>
+        <form action="/timetable" method="POST">
+          <input type="hidden" name="form" value="open" />
+          <button
+            type="submit"
+            class="btn btn-primary"
+            name="open-timetable"
+            value="{{i[2]}}"
+          >
+            Edit This Table
+          </button>
+        </form>
+      </td>
+      <td>
+        <form action="/timetable" method="POST">
+          <input type="hidden" name="form" value="delete" />
+          <button
+            type="submit"
+            class="btn btn-danger"
+            name="delete-timetable"
+            value="{{i[2]}}"
+          >
+          🗑️
+          </button>
+        </form>
+      </td>
+    </tr>
+    {%endfor%}
+  </tbody>
 </table>
 <div>
-    Icons made by
-    <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
-        >Freepik</a
-    >
-    from
-    <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+  Icons made by
+  <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
+  from
+  <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
 </div>
 {% endblock %}
 <!-- prettier-ignore-end -->

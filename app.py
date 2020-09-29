@@ -207,7 +207,39 @@ def timetable():
             query = f"SELECT * FROM users WHERE id = '{userid}';"
             rows = query_select(connection, query)
             username = rows[0][1]
-        return redirect("/timetable/" + username + "/" + table)
+            return redirect("/timetable/" + username + "/" + table)
+        elif request.form.get("form") == "delete":
+            table = request.form.get("delete-timetable")
+            userid = session["user_id"]
+            query = f"SELECT * FROM users WHERE id = '{userid}';"
+            rows = query_select(connection, query)
+            username = rows[0][1]
+            return redirect("/timetable/" + username + "/" + table + "/" + "remove-timetable")
+
+@app.route('/timetable/<user>/<table>/remove-timetable', methods=["GET", "POST"])
+@login_required
+def remove_table(user, table):
+    if request.method == "GET":
+        userid = session["user_id"]
+        query = f"SELECT * FROM timetable WHERE usersid = {userid};"
+        timetables = query_select(connection, query)
+
+        query = f"SELECT * FROM users WHERE id = '{userid}';"
+        rows = query_select(connection, query)
+        username = rows[0][1]
+        url = "/timetable/" + user + "/" + table + "/remove-timetable"
+
+        for i in timetables:
+            if i[2] == table:
+                if user == username:
+                    return render_template("remove-timetable.html", user=user, table=table, url=url)
+        return apology("This table does not exist", 403)
+    else:
+        if request.form.get("choice") == "yes":
+            print("remove")
+        else:
+            print("did not remove")
+        return redirect('/timetable')
 
 
 @app.route('/timetable/<user>/<table>', methods=["GET", "POST"])

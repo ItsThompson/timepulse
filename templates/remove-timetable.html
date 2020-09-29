@@ -1,0 +1,21 @@
+<!-- prettier-ignore -->
+{% extends "layout.html" %}
+
+{% block title %}
+    Remove {{table}}
+{% endblock %}
+
+{% block main %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Are you sure you want to remove {{table}}?</h1>
+      <form action="{{url}}" method="POST">
+        <button class="btn btn-lg" name="choice" type="submit" value="yes">Yes</button>
+        <button class="btn btn-lg" name="choice" type="submit" value="no">No</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+<!-- prettier-ignore-end -->
