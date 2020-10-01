@@ -216,6 +216,7 @@ def timetable():
             username = rows[0][1]
             return redirect("/timetable/" + username + "/" + table + "/" + "remove-timetable")
 
+
 @app.route('/timetable/<user>/<table>/remove-timetable', methods=["GET", "POST"])
 @login_required
 def remove_table(user, table):
@@ -262,12 +263,25 @@ def table(user, table):
         return apology("This table does not exist", 403)
     else:
         if request.form.get("form") == "create":
-            title = request.form.get("name")
+            userid = session["user_id"]
+            if not request.form.get("title") or not request.form.get("description") or not request.form.get("dow") or not request.form.get("time"):
+                return apology("The form has not been filled in yet!", 403)
+            title = request.form.get("title")
             description = request.form.get("description")
             dow = request.form.get("dow")
             time = request.form.get("time")
             print("Title: " + title + "\n" + "Description: " + description +
-                  "\n" + "Days of the week: " + dow + "\n" + "Time: " + time + ":00" + "\n")
+                  "\n" + "Days of the week: " + dow + "\n" + "Time: " + time + ":00")
+
+            query = f"SELECT * FROM timetable WHERE name = '{table}' AND usersid = '{userid}';"
+            table_info = query_select(connection, query)
+
+            query = f"INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('{table_info[0][0]}', '{dow}', '{title}', '{description}', '{time}');"
+            print(query)
+            try:
+                query_create_insert(connection, query)
+            except psycopg2.errors.UniqueViolation as e:
+                return apology("This username or email is already in use!", 403)
             return redirect('/timetable/'+user+'/'+table)
 
 
