@@ -246,6 +246,20 @@ def remove_table(user, table):
 @app.route('/timetable/<user>/<table>', methods=["GET", "POST"])
 @login_required
 def table(user, table):
+    data = []
+    userid = session["user_id"]
+    query = f"SELECT * FROM timetable WHERE name = '{table}' AND usersid = '{userid}';"
+    table_info = query_select(connection, query)
+    # If there is no table called {table} AND no userid that equals {userid}, then it returns []
+    # Output: [(id, usersid, name, visibility, alerttime)]
+    # Example Output: [(2, 3, 'asdf', 'public', None)]
+    if table_info is not []:
+        query = f"SELECT * FROM items WHERE tableid = {table_info[0][0]};"
+        data = query_select(connection, query)
+        # Example Output: [(1, 2, 'monday', 'title ', 'description', 1), (2, 2, 'monday', 'title', 'description', 2), (3, 2, 'thursday', 'monday title', 'description', 4)]
+
+    url = "/timetable/" + user + "/" + table
+
     if request.method == "GET":
         userid = session["user_id"]
         query = f"SELECT * FROM timetable WHERE usersid = {userid};"
@@ -254,7 +268,6 @@ def table(user, table):
         query = f"SELECT * FROM users WHERE id = '{userid}';"
         rows = query_select(connection, query)
         username = rows[0][1]
-        url = "/timetable/" + user + "/" + table
 
         for i in timetables:
             if i[2] == table:
@@ -263,26 +276,20 @@ def table(user, table):
         return apology("This table does not exist", 403)
     else:
         if request.form.get("form") == "create":
-            userid = session["user_id"]
             if not request.form.get("title") or not request.form.get("description") or not request.form.get("dow") or not request.form.get("time"):
                 return apology("The form has not been filled in yet!", 403)
             title = request.form.get("title")
             description = request.form.get("description")
             dow = request.form.get("dow")
             time = request.form.get("time")
-            print("Title: " + title + "\n" + "Description: " + description +
-                  "\n" + "Days of the week: " + dow + "\n" + "Time: " + time + ":00")
-
-            query = f"SELECT * FROM timetable WHERE name = '{table}' AND usersid = '{userid}';"
-            table_info = query_select(connection, query)
 
             query = f"INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('{table_info[0][0]}', '{dow}', '{title}', '{description}', '{time}');"
-            print(query)
+            # Example Output: INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('2', 'thursday', 'monday title', 'description', '4');
             try:
                 query_create_insert(connection, query)
             except psycopg2.errors.UniqueViolation as e:
-                return apology("This username or email is already in use!", 403)
-            return redirect('/timetable/'+user+'/'+table)
+                return apology("", 403)
+            return render_template("table.html", user=user, table=table, url=url)
 
 
 @app.route("/logout")
