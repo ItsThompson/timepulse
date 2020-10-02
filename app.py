@@ -246,7 +246,25 @@ def remove_table(user, table):
 @app.route('/timetable/<user>/<table>', methods=["GET", "POST"])
 @login_required
 def table(user, table):
-    data = []
+    data = {
+        'monday':[],
+        'tuesday':[],
+        'wednesday':[],
+        'thursday':[],
+        'friday':[],
+        'saturday':[],
+        'sunday':[]
+    }
+    # Output: {
+    #     'monday' : [(1,2 'dow', 'title', 'description', #), (1,2 'dow', 'title', 'description', #)],
+    #     'tuesday' : [(1,2 'dow', 'title', 'description', #), (1,2 'dow', 'title', 'description', #)],
+    #     'wednesday' : [(1,2 'dow', 'title', 'description', #), (1,2 'dow', 'title', 'description', #)],
+    #     'thursday' : [(1,2 'dow', 'title', 'description', #), (1,2 'dow', 'title', 'description', #)],
+    #     'friday' : [(1,2 'dow', 'title', 'description', #), (1,2 'dow', 'title', 'description', #)],
+    #     'saturday' : [(1,2 'dow', 'title', 'description', #), (1,2 'dow', 'title', 'description', #)],
+    #     'sunday' : [(1,2 'dow', 'title', 'description', #), (1,2 'dow', 'title', 'description', #)]
+    # }
+    url = "/timetable/" + user + "/" + table
     userid = session["user_id"]
     query = f"SELECT * FROM timetable WHERE name = '{table}' AND usersid = '{userid}';"
     table_info = query_select(connection, query)
@@ -255,10 +273,11 @@ def table(user, table):
     # Example Output: [(2, 3, 'asdf', 'public', None)]
     if table_info is not []:
         query = f"SELECT * FROM items WHERE tableid = {table_info[0][0]};"
-        data = query_select(connection, query)
-        # Example Output: [(1, 2, 'monday', 'title ', 'description', 1), (2, 2, 'monday', 'title', 'description', 2), (3, 2, 'thursday', 'monday title', 'description', 4)]
-
-    url = "/timetable/" + user + "/" + table
+        raw_data = query_select(connection, query)
+        # Example Output: [(1, 2, 'monday', 'title ', 'description', 1), (3, 2, 'thursday', 'monday title', 'description', 4)]
+        for i in raw_data:
+            data_dow = i[2]
+            data[data_dow].append(i)
 
     if request.method == "GET":
         userid = session["user_id"]
@@ -272,7 +291,7 @@ def table(user, table):
         for i in timetables:
             if i[2] == table:
                 if user == username:
-                    return render_template("table.html", user=user, table=table, url=url)
+                    return render_template("table.html", user=user, table=table, url=url, data=data)
         return apology("This table does not exist", 403)
     else:
         if request.form.get("form") == "create":
@@ -283,13 +302,16 @@ def table(user, table):
             dow = request.form.get("dow")
             time = request.form.get("time")
 
+            for i in raw_data:
+                if i[2] == dow and i[5] == time:
+                    return apology("This time slot has already been assigned!", 403)
             query = f"INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('{table_info[0][0]}', '{dow}', '{title}', '{description}', '{time}');"
             # Example Output: INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('2', 'thursday', 'monday title', 'description', '4');
             try:
                 query_create_insert(connection, query)
             except psycopg2.errors.UniqueViolation as e:
-                return apology("", 403)
-            return render_template("table.html", user=user, table=table, url=url)
+                return apology("Sorry! This timeslot has already been assigned.", 403)
+            return render_template("table.html", user=user, table=table, url=url, data=data)
 
 
 @app.route("/logout")
