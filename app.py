@@ -237,8 +237,10 @@ def remove_table(user, table):
         return apology("This table does not exist", 403)
     else:
         if request.form.get("choice") == "yes":
+            # TODO
             print("remove")
         else:
+            # TODO
             print("did not remove")
         return redirect('/timetable')
 
