@@ -78,6 +78,14 @@ def query_select(connection, query):
     except OperationalError as e:
         print(f"The error '{e}' occurred")
 
+def query_delete(connection, query):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+        print("Query executed successfully")
+    except OperationalError as e:
+        print(f"The error '{e}' occurred")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -222,7 +230,7 @@ def timetable():
 def remove_table(user, table):
     if request.method == "GET":
         userid = session["user_id"]
-        query = f"SELECT * FROM timetable WHERE usersid = {userid};"
+        query = f"SELECT * FROM timetable WHERE usersid = '{userid}';"
         timetables = query_select(connection, query)
 
         query = f"SELECT * FROM users WHERE id = '{userid}';"
@@ -238,7 +246,14 @@ def remove_table(user, table):
     else:
         if request.form.get("choice") == "yes":
             # TODO
-            print("remove")
+            userid = session["user_id"]
+            query = f"SELECT * FROM timetable WHERE usersid = '{userid}';"
+            timetables = query_select(connection, query)
+            for i in timetables:
+                if i[2] == table:
+                    tableid = i[0]
+            query = f"DELETE FROM timetable WHERE id = '{tableid}';"
+            query_delete(connection,query)
         else:
             # TODO
             print("did not remove")
