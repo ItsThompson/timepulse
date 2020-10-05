@@ -245,7 +245,6 @@ def remove_table(user, table):
         return apology("This table does not exist", 403)
     else:
         if request.form.get("choice") == "yes":
-            # TODO
             userid = session["user_id"]
             query = f"SELECT * FROM timetable WHERE usersid = '{userid}';"
             timetables = query_select(connection, query)
@@ -254,9 +253,6 @@ def remove_table(user, table):
                     tableid = i[0]
             query = f"DELETE FROM timetable WHERE id = '{tableid}';"
             query_delete(connection,query)
-        else:
-            # TODO
-            print("did not remove")
         return redirect('/timetable')
 
 
