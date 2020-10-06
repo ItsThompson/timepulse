@@ -315,15 +315,17 @@ def table(user, table):
             dow = request.form.get("dow")
             time = request.form.get("time")
 
-            for i in raw_data:
-                if i[2] == dow and i[5] == time:
+            for i in range(len(raw_data)):
+                print(raw_data[i][2])
+                print(dow)
+                print(raw_data[i][5])
+                print(time)
+                if str(raw_data[i][2]) == str(dow) and str(raw_data[i][5]) == str(time):
+                    print("here")
                     return apology("This time slot has already been assigned!", 403)
             query = f"INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('{table_info[0][0]}', '{dow}', '{title}', '{description}', '{time}');"
             # Example Output: INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('2', 'thursday', 'monday title', 'description', '4');
-            try:
-                query_create_insert(connection, query)
-            except psycopg2.errors.UniqueViolation as e:
-                return apology("Sorry! This timeslot has already been assigned.", 403)
+            query_create_insert(connection, query)
             return render_template("table.html", user=user, table=table, url=url, data=data)
 
 
