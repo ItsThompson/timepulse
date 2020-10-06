@@ -166,6 +166,10 @@ main table {
     text-align: left;
 }
 
+main tbody tr td {
+    max-width: 5rem;
+}
+
 main tfoot {
     font-weight: bold;
 }
