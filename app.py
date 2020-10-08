@@ -90,7 +90,7 @@ def query_delete(connection, query):
 @app.route("/", methods=["GET", "POST"])
 def index():
     if session.get("user_id") is not None:
-        return render_template("dashboard.html")
+        return timetable()
     else:
         return render_template("index.html")
 
@@ -316,10 +316,6 @@ def table(user, table):
             time = request.form.get("time")
 
             for i in range(len(raw_data)):
-                print(raw_data[i][2])
-                print(dow)
-                print(raw_data[i][5])
-                print(time)
                 if str(raw_data[i][2]) == str(dow) and str(raw_data[i][5]) == str(time):
                     print("here")
                     return apology("This time slot has already been assigned!", 403)
@@ -327,6 +323,40 @@ def table(user, table):
             # Example Output: INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('2', 'thursday', 'monday title', 'description', '4');
             query_create_insert(connection, query)
             return render_template("table.html", user=user, table=table, url=url, data=data)
+
+@app.route('/timetable/<user>/<table>/<dayoftheweek>/<time>', methods=["GET", "POST"])
+def description(user, table, dayoftheweek, time):
+    url = "/timetable/" + user + "/" + table + "/" + dayoftheweek + "/" + time
+    if request.method == "GET":
+        data = {
+            'title':None,
+            'description':None
+        }
+        
+
+        userid = session["user_id"]
+        query = f"SELECT id FROM timetable WHERE name = '{table}' AND usersid = '{userid}';"
+        table_info = query_select(connection, query)
+
+        userid = session["user_id"]
+        query = f"SELECT * FROM timetable WHERE usersid = {userid};"
+        timetables = query_select(connection, query)
+
+        query = f"SELECT * FROM users WHERE id = '{userid}';"
+        rows = query_select(connection, query)
+        username = rows[0][1]
+
+        for i in timetables:
+            if i[2] == table:
+                if user == username:
+                    query = f"SELECT title, description FROM items WHERE tableid = {table_info[0][0]} and daysofweek = '{dayoftheweek}' and time = {time};"
+                    raw_data = query_select(connection, query)
+                    data['title'] = raw_data[0][0]
+                    data['description'] = raw_data[0][1]
+                    return render_template("description.html", title=data['title'], description=data['description'], url=url)
+        return apology("This table does not exist", 403)
+    else:
+        return redirect("/timetable/" + user + "/" + table)
 
 
 @app.route("/logout")

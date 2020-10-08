@@ -116,53 +116,81 @@
                 {{"%02d"|format(i)}}:00 - {{"%02d"|format(i+1)}}:00
             </th>
             <td scope="row" id="monday{{i}}">
-                {%for j in data["monday"]%}
-                {% if j[5] == (i)%}
-                {{j[3]}}
-                {% endif %}
-                {% endfor %}
+                <form action="{{url}}/monday/{{i}}">
+                    <button style="outline: 0; background-color: transparent; border-color: transparent; cursor: default;">
+                        {%for j in data["monday"]%}
+                        {% if j[5] == (i)%}
+                        {{j[3]}}
+                        {% endif %}
+                        {% endfor %}    
+                    </button>
+                </form>
             </td>
             <td scope="row" id="tuesday{{i}}">
-                {%for j in data["tuesday"]%}
-                {% if j[5] == (i)%}
-                {{j[3]}}
-                {% endif %}
-                {% endfor %}
+                <form action="{{url}}/tuesday/{{i}}">
+                    <button style="outline: 0; background-color: transparent; border-color: transparent; cursor: default;">
+                        {%for j in data["tuesday"]%}
+                        {% if j[5] == (i)%}
+                        {{j[3]}}
+                        {% endif %}
+                        {% endfor %}
+                    </button>
+                </form>
             </td>
             <td scope="row" id="wednesday{{i}}">
-                {%for j in data["wednesday"]%}
-                {% if j[5] == (i)%}
-                {{j[3]}}
-                {% endif %}
-                {% endfor %}
+                <form action="{{url}}/wednesday/{{i}}">
+                    <button style="outline: 0; background-color: transparent; border-color: transparent; cursor: default;">
+                        {%for j in data["wednesday"]%}
+                        {% if j[5] == (i)%}
+                        {{j[3]}}
+                        {% endif %}
+                        {% endfor %}    
+                    </button>
+                </form>
             </td>
             <td scope="row" id="thursday{{i}}">
-                {%for j in data["thursday"]%}
-                {% if j[5] == (i)%}
-                {{j[3]}}
-                {% endif %}
-                {% endfor %}
+                <form action="{{url}}/thursday/{{i}}">
+                    <button style="outline: 0; background-color: transparent; border-color: transparent; cursor: default;">
+                        {%for j in data["thursday"]%}
+                        {% if j[5] == (i)%}
+                        {{j[3]}}
+                        {% endif %}
+                        {% endfor %}    
+                    </button>
+                </form>
             </td>
             <td scope="row" id="friday{{i}}">
-                {%for j in data["friday"]%}
-                {% if j[5] == (i)%}
-                {{j[3]}}
-                {% endif %}
-                {% endfor %}
+                <form action="{{url}}/friday/{{i}}">
+                    <button style="outline: 0; background-color: transparent; border-color: transparent; cursor: default;">
+                        {%for j in data["friday"]%}
+                        {% if j[5] == (i)%}
+                        {{j[3]}}
+                        {% endif %}
+                        {% endfor %}
+                    </button>
+                </form>
             </td>
             <td scope="row" id="saturday{{i}}">
-                {%for j in data["saturday"]%}
-                {% if j[5] == (i)%}
-                {{j[3]}}
-                {% endif %}
-                {% endfor %}
+                <form action="{{url}}/saturday/{{i}}">
+                    <button style="outline: 0; background-color: transparent; border-color: transparent; cursor: default;">
+                        {%for j in data["saturday"]%}
+                        {% if j[5] == (i)%}
+                        {{j[3]}}
+                        {% endif %}
+                        {% endfor %}
+                    </button>
+                </form>
             </td>
             <td scope="row" id="sunday{{i}}">
-                {%for j in data["sunday"]%}
-                {% if j[5] == (i)%}
-                {{j[3]}}
-                {% endif %}
-                {% endfor %}
+                <form action="{{url}}/sunday/{{i}}">
+                    <button style="outline: 0; background-color: transparent; border-color: transparent; cursor: default;">
+                        {%for j in data["sunday"]%}
+                        {% if j[5] == (i)%}
+                        {{j[3]}}
+                        {% endif %}
+                        {% endfor %}
+                    </button>
+                </form>              
             </td>
         </tr>
         {%endfor%}

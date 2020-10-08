@@ -1,0 +1,18 @@
+<!-- prettier-ignore -->
+{% extends "no-padding-layout.html" %}
+
+{% block title %}
+    {{title}}
+{% endblock %}
+
+{% block main %}
+<h1>{{title}}</h1>
+<p>{{description}}</p>
+<form action="{{url}}" method="POST">
+    <button type="submit" class="btn btn-primary">
+        Back
+    </button>
+</form>
+<br>
+{% endblock %}
+<!-- prettier-ignore-end -->
