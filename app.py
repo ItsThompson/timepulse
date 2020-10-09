@@ -122,7 +122,7 @@ def login():
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0][3], request.form.get("password")):
-            return apology("invalid username and/or password", 403)
+            return apology("invalid username or password", 403)
 
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
@@ -153,7 +153,11 @@ def register():
             "^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", email)
         if not regex_email:
             return apology("Please enter an email.", 403)
-
+        
+        regex = re.search("^[a-zA-Z0-9_]*$", username)
+        if not regex:
+            return apology("Only alphanumeric and underscores are allowed", 403)
+        
         query = f"INSERT INTO users(username, email, hash) VALUES('{username}', '{email}', '{pass_hash}');"
         try:
             query_create_insert(connection, query)
@@ -187,10 +191,16 @@ def timetable():
             if not request.form.get("name"):
                 return apology("Please input a name for your timetable.", 403)
             else:
+                regex = re.search("^[a-zA-Z0-9_]*$", request.form.get("name"))
+                if not regex:
+                    return apology("Only alphanumeric and underscores are allowed", 403)
                 name = request.form.get("name")
             if not request.form.get("visibility"):
                 return apology("Please choose a visibility for your timetable!.", 403)
             else:
+                regex = re.search("^[a-zA-Z0-9_]*$", request.form.get("visibility"))
+                if not regex:
+                    return apology("Only alphanumeric and underscores are allowed", 403)
                 visibility = request.form.get("visibility")
 
             userid = session["user_id"]
@@ -259,6 +269,9 @@ def remove_table(user, table):
 @app.route('/timetable/<user>/<table>', methods=["GET", "POST"])
 @login_required
 def table(user, table):
+    regex = re.search("^[a-zA-Z0-9_]*$", table)
+    if not regex:
+        return apology("Only alphanumeric and underscores are allowed", 403)
     data = {
         'monday':[],
         'tuesday':[],
@@ -310,10 +323,30 @@ def table(user, table):
         if request.form.get("form") == "create":
             if not request.form.get("title") or not request.form.get("description") or not request.form.get("dow") or not request.form.get("time"):
                 return apology("The form has not been filled in yet!", 403)
-            title = request.form.get("title")
-            description = request.form.get("description")
-            dow = request.form.get("dow")
-            time = request.form.get("time")
+            
+            regex = re.search("^[a-zA-Z0-9_]*$", request.form.get("title"))
+            if not regex:
+                return apology("Only alphanumeric and underscores are allowed", 403)
+            else:
+                title = request.form.get("title")
+            
+            regex = re.search("^[a-zA-Z0-9_]*$", request.form.get("description"))
+            if not regex:
+                return apology("Only alphanumeric and underscores are allowed", 403)
+            else:
+                description = request.form.get("description")
+            
+            regex = re.search("^[a-zA-Z0-9_]*$", request.form.get("dow"))
+            if not regex:
+                return apology("Only alphanumeric and underscores are allowed", 403)
+            else:
+                dow = request.form.get("dow")
+            
+            regex = re.search("^[0-9]*$", request.form.get("time"))
+            if not regex:
+                return apology("Only numeric are allowed", 403)
+            else:
+                time = request.form.get("time")
 
             for i in range(len(raw_data)):
                 if str(raw_data[i][2]) == str(dow) and str(raw_data[i][5]) == str(time):
@@ -328,11 +361,22 @@ def table(user, table):
 def description(user, table, dayoftheweek, time):
     url = "/timetable/" + user + "/" + table + "/" + dayoftheweek + "/" + time
     if request.method == "GET":
+        regex = re.search("^[a-zA-Z0-9_]*$", dayoftheweek)
+        if not regex:
+            return apology("Only alphanumeric and underscores are allowed", 403)
+        
+        regex = re.search("^[0-9]*$", time)
+        if not regex:
+            return apology("Only alphanumeric and underscores are allowed", 403)
+
         data = {
             'title':None,
             'description':None
         }
-        
+
+        regex = re.search("^[a-zA-Z0-9_]*$", table)
+        if not regex:
+            return apology("Only alphanumeric and underscores are allowed", 403)
 
         userid = session["user_id"]
         query = f"SELECT id FROM timetable WHERE name = '{table}' AND usersid = '{userid}';"
