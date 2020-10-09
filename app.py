@@ -330,9 +330,9 @@ def table(user, table):
             else:
                 title = request.form.get("title")
             
-            regex = re.search("^[a-zA-Z0-9_]*$", request.form.get("description"))
+            regex = re.search("^[a-zA-Z0-9_\s]*$", request.form.get("description"))
             if not regex:
-                return apology("Only alphanumeric and underscores are allowed", 403)
+                return apology("Only alphanumeric, spaces and underscores are allowed", 403)
             else:
                 description = request.form.get("description")
             
@@ -355,7 +355,8 @@ def table(user, table):
             query = f"INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('{table_info[0][0]}', '{dow}', '{title}', '{description}', '{time}');"
             # Example Output: INSERT INTO items(tableid, daysofweek, title, description, time) VALUES('2', 'thursday', 'monday title', 'description', '4');
             query_create_insert(connection, query)
-            return render_template("table.html", user=user, table=table, url=url, data=data)
+            return redirect(request.url)
+            #render_template("table.html", user=user, table=table, url=url, data=data)
 
 @app.route('/timetable/<user>/<table>/<dayoftheweek>/<time>', methods=["GET", "POST"])
 def description(user, table, dayoftheweek, time):
